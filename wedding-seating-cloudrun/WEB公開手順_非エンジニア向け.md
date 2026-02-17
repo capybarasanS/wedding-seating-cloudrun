@@ -50,6 +50,20 @@ gcloud services enable run.googleapis.com cloudbuild.googleapis.com firestore.go
 
 ## 4. デプロイ（コピペで実行）
 
+### 4-0. 先にGitHubへアップロード（推奨）
+Cloud Run公開前に、まずGitHubへアップロードしておくと管理しやすいです。
+
+1. GitHubで空リポジトリを作成（例: `wedding-seating-cloudrun`）
+2. ターミナルでこのプロジェクトのルートに移動
+3. 以下を実行（`YOUR_GITHUB_URL` はあなたのURLに置換）
+
+```bash
+git remote add origin YOUR_GITHUB_URL
+git push -u origin main
+```
+
+これで「最新版コード」がGitHubに保存されます。
+
 ### 4-1. Cloud Shell を開く
 Google Cloud Console 右上の `>_` アイコン（Cloud Shell）をクリック
 
@@ -85,6 +99,19 @@ gcloud run deploy wedding-seating \
 ```
 
 完了すると URL が表示されます。これが公開URLです。
+
+### 4-6. GitHubの内容を使って再デプロイする場合
+コード更新後は、Cloud Shellで最新を取得して同じ手順を再実行します。
+
+```bash
+git pull
+gcloud builds submit --tag gcr.io/YOUR_PROJECT_ID/wedding-seating
+gcloud run deploy wedding-seating \
+  --image gcr.io/YOUR_PROJECT_ID/wedding-seating \
+  --platform managed \
+  --region asia-northeast1 \
+  --allow-unauthenticated
+```
 
 ---
 
@@ -154,4 +181,3 @@ URLの `?p=xxxx` がプロジェクトIDです。
 2. 招待状送付状況などの項目追加
 3. 誤操作防止（削除確認、履歴復元）
 4. 料金最適化（自動スケーリング調整）
-
